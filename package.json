@@ -1,6 +1,6 @@
 {
   "name": "remotefs",
-  "displayName": "Remote FS",
+  "displayName": "Remote FS PLUS",
   "description": "Working with any file in everywhere like they are in local with vscdoe.",
   "version": "0.0.16",
   "publisher": "liximomo",
@@ -240,7 +240,7 @@
     "commands": [
       {
         "command": "remotefs.addFolderToWorkspace",
-        "title": "Remote FS: Add Folder to Workspace"
+        "title": "zzz Remote FS: Add Folder to Workspace"
       }
     ]
   },

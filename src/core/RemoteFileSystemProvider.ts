@@ -5,6 +5,8 @@ import logger from '../logger';
 import toAbsoluteUri from '../helpers/toAbsoluteUri';
 import reportError from '../helpers/reportError';
 import ConnectManager, { Connect, ConnectClient } from './ConnectManager';
+// import fs
+import * as fs from "fs";
 
 export enum ErrorCode {
   FILE_NOT_FOUND = 2,
@@ -130,7 +132,23 @@ export default abstract class RemoteFileSystemProvider implements vscode.FileSys
     logger.trace('readFile', uri.path);
     const connect = await this._connect(uri);
     try {
-      return await this.$readFile(toAbsoluteUri(uri, connect.wd), connect.client);
+      const absUri = toAbsoluteUri(uri, connect.wd);
+      const doc = await this.$readFile(absUri, connect.client);
+      console.log(uri.path);
+      // save to root path of vs code 
+
+      // 워크스페이스 경로들주에 로컬인거 찾기
+      const workspace = vscode.workspace.workspaceFolders.find(
+        (workspace) => workspace.uri.scheme === 'file'
+      );
+      if (workspace) {
+        const rootPath = workspace.uri.path;
+        const filePath = upath.join(rootPath, uri.path);
+        console.log(filePath);
+        fs.writeFileSync(filePath, doc);
+      }
+
+      return doc;
     } catch (error) {
       if (error.code === ErrorCode.FILE_NOT_FOUND) {
         error = FileSystemError.FileNotFound(uri);
